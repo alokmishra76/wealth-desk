@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../../app/hook';
 import { validateLoginForm, type LoginFormErrors } from './Validation';
 import { Button } from '../../../components/ui/button/Button';
 import { Input } from '../../../components/ui/input/Input';
+import { EyeIcon, EyeOffIcon, LockIcon, MailIcon } from './AuthIcons';
 
 export function LoginPage() {
   const dispatch = useAppDispatch();
@@ -14,8 +15,29 @@ export function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [formErrors, setFormErrors] = useState<LoginFormErrors>({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const isLoading = status === 'loading';
+
+  /**
+   * Clears a field's error the moment the user edits it again — without
+   * this, fixing a typo in the email field would still show "Enter a
+   * valid email address" underneath until the next submit, which reads
+   * as the form ignoring what you just typed.
+   */
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    if (formErrors.email) {
+      setFormErrors((prev) => ({ ...prev, email: undefined }));
+    }
+  };
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    if (formErrors.password) {
+      setFormErrors((prev) => ({ ...prev, password: undefined }));
+    }
+  };
 
   /**
    * We validate ON SUBMIT, not on every keystroke. Validating live
@@ -89,20 +111,34 @@ export function LoginPage() {
               type="email"
               autoComplete="email"
               value={email}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
               error={formErrors.email}
               disabled={isLoading}
+              leftIcon={<MailIcon />}
               fullWidth
             />
 
             <Input
               label="Password"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               autoComplete="current-password"
               value={password}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
               error={formErrors.password}
               disabled={isLoading}
+              leftIcon={<LockIcon />}
+              rightIcon={
+                <button
+                  type="button"
+                  className={styles.iconButton}
+                  onClick={() => setShowPassword((v) => !v)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  // Toggling visibility isn't meaningful while there's nothing typed yet
+                  disabled={isLoading || !password}
+                >
+                  {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+                </button>
+              }
               fullWidth
             />
 

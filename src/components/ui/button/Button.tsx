@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 import { cn } from './ClassNames';
-import styles  from './button.module.css'
+import styles from './Button.module.css';
 import type { ButtonProps } from './Button.types';
 
 /**

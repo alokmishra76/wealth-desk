@@ -45,6 +45,27 @@
   position: absolute;
   border-radius: 50%;
   border: 1.5px solid rgba(255, 255, 255, 0.15);
+  animation: float 7s ease-in-out infinite;
+}
+
+.decorCircle:nth-child(2) {
+  animation-delay: -3.5s; /* offsets the two circles so they don't move in lockstep */
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .formCard,
+  .decorCircle {
+    animation: none;
+  }
 }
 
 @media (min-width: 900px) {
@@ -66,6 +87,48 @@
 .formCard {
   width: 100%;
   max-width: 380px;
+  animation: cardIn 0.4s ease both;
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Password show/hide toggle — sits in the Input's rightIcon slot, so
+   it needs its own reset since it's a real <button>, not a bare icon. */
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 2px;
+  margin: 0;
+  color: #6a6a6a;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: color 0.15s ease;
+}
+
+.iconButton:hover:not(:disabled) {
+  color: #1a1a1a;
+}
+
+.iconButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.iconButton:focus-visible {
+  outline: 2px solid #1a56db;
+  outline-offset: 1px;
 }
 
 .heading {
@@ -111,4 +174,16 @@
   border-radius: 6px;
   padding: 10px 12px;
   margin-bottom: 4px;
+  animation: errorIn 0.2s ease both;
+}
+
+@keyframes errorIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
